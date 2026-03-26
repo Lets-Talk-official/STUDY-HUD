@@ -1,1 +1,449 @@
-gay
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HUD</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #00ff41;
+  --green-dim: #00c832;
+  --green-dark: #007a1f;
+  --green-deeper: #003d0f;
+  --bg: #0a1a0d;
+  --panel: #061209;
+  --border: #005c14;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--bg);
+  color: var(--green);
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+}
+
+@keyframes flicker {
+  0%,100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.88; }
+  94% { opacity: 1; }
+  97% { opacity: 0.94; }
+  98% { opacity: 1; }
+}
+body { animation: flicker 6s infinite; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.18) 0px,
+    rgba(0,0,0,0.18) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+  z-index: 999;
+}
+
+#noise {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.04;
+}
+
+#tape {
+  position: fixed;
+  left: 0; right: 0;
+  height: 3px;
+  background: rgba(0,255,65,0.12);
+  pointer-events: none;
+  z-index: 998;
+  animation: sweep 8s linear infinite;
+}
+@keyframes sweep { from { top: -4px; } to { top: 100vh; } }
+
+#app {
+  position: relative; z-index: 2;
+  width: 100vw; height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr 1fr auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+}
+
+#topbar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 7px;
+}
+
+.sys-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: var(--green-dim);
+  text-transform: uppercase;
+}
+
+.rec-dot {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; letter-spacing: 0.15em; color: var(--green-dark);
+}
+.rec-dot::before {
+  content: '';
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.15} }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  position: relative;
+  overflow: hidden;
+}
+.panel::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: var(--green-dark);
+}
+
+.plabel {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--green-dark);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+/* CLOCK */
+#clock-panel { grid-column: 1; display: flex; flex-direction: column; justify-content: center; }
+#clock-time {
+  font-size: clamp(26px, 3.8vw, 50px);
+  color: var(--green);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  text-shadow: 0 0 14px rgba(0,255,65,0.7);
+}
+#clock-date { font-size: 11px; color: var(--green-dim); margin-top: 5px; letter-spacing: 0.06em; }
+#clock-ms { font-size: 10px; color: var(--green-dark); margin-top: 3px; }
+
+/* PERIOD */
+#period-panel {
+  grid-column: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+}
+#period-icon-text {
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(0,255,65,0.5);
+  text-align: center;
+}
+#period-name {
+  font-size: 15px;
+  color: var(--green);
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 8px rgba(0,255,65,0.4);
+}
+#period-range { font-size: 10px; color: var(--green-dark); }
+#period-bar-bg {
+  width: 100%; height: 3px; background: var(--green-deeper); overflow: hidden; margin-top: 5px;
+}
+#period-bar-fill { height: 3px; background: var(--green); transition: width 1s linear; }
+
+/* SECONDS */
+#seconds-panel { grid-column: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+#sec-svg-wrap { position: relative; width: 84px; height: 84px; }
+#sec-svg-wrap svg { position: absolute; top: 0; left: 0; }
+#sec-num {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 22px;
+  color: var(--green);
+  text-shadow: 0 0 8px rgba(0,255,65,0.6);
+}
+#sec-label { font-size: 9px; color: var(--green-dark); letter-spacing: 0.15em; margin-top: 6px; text-align: center; }
+
+/* CALENDAR */
+#cal-panel { grid-column: 1; }
+#cal-month { font-size: 12px; color: var(--green-dim); margin-bottom: 6px; letter-spacing: 0.1em; text-transform: uppercase; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-dn { text-align: center; font-size: 9px; color: var(--green-dark); padding-bottom: 3px; }
+.cal-d { text-align: center; font-size: 11px; padding: 3px 2px; color: var(--green-dark); }
+.cal-d.today {
+  background: var(--green);
+  color: #000;
+  font-weight: 700;
+  text-shadow: none;
+}
+.cal-d.empty { visibility: hidden; }
+
+/* WEATHER */
+#weather-panel { grid-column: 2; }
+#weather-temp-big {
+  font-size: 32px;
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(0,255,65,0.5);
+  line-height: 1;
+}
+#weather-cond { font-size: 11px; color: var(--green-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+#weather-loc { font-size: 10px; color: var(--green-dark); margin-top: 2px; letter-spacing: 0.08em; }
+.forecast { display: flex; gap: 5px; margin-top: 8px; }
+.fc { flex: 1; border: 1px solid var(--border); padding: 5px 4px; text-align: center; }
+.fc-dn { font-size: 9px; color: var(--green-dark); }
+.fc-t { font-size: 11px; color: var(--green-dim); margin-top: 3px; }
+
+/* STATUS */
+#misc-panel { grid-column: 3; display: flex; flex-direction: column; gap: 8px; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
+.stat-key { color: var(--green-dark); letter-spacing: 0.08em; }
+.stat-val { color: var(--green); font-size: 10px; }
+.bar-mini { height: 2px; background: var(--green-deeper); overflow: hidden; margin-top: 3px; }
+.bar-mini-fill { height: 2px; background: var(--green-dim); transition: width 1s; }
+
+/* bottom bar */
+#bottombar {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border);
+  padding-top: 7px;
+  font-size: 10px;
+  color: var(--green-dark);
+  letter-spacing: 0.1em;
+}
+.blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+</style>
+</head>
+<body>
+<canvas id="noise"></canvas>
+<div id="tape"></div>
+
+<div id="app">
+
+  <div id="topbar">
+    <span class="sys-label">PERSONAL HUD &middot; SYS-01</span>
+    <div class="rec-dot">REC</div>
+    <span class="sys-label" id="uptime-label">UPTIME: 00:00:00</span>
+  </div>
+
+  <div class="panel" id="clock-panel">
+    <div class="plabel">24H Clock</div>
+    <div id="clock-time">--:--:--</div>
+    <div id="clock-date">Loading...</div>
+    <div id="clock-ms">MS: <span id="ms-val">000</span></div>
+  </div>
+
+  <div class="panel" id="period-panel">
+    <div class="plabel" style="position:absolute;top:10px;left:12px;">Time of Day</div>
+    <div id="period-icon-text">[ -- ]</div>
+    <div id="period-name">--</div>
+    <div id="period-range">--</div>
+    <div id="period-bar-bg"><div id="period-bar-fill"></div></div>
+  </div>
+
+  <div class="panel" id="seconds-panel">
+    <div class="plabel">Second</div>
+    <div id="sec-svg-wrap">
+      <svg width="84" height="84" viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="46" fill="none" stroke="#003d0f" stroke-width="5"/>
+        <circle id="sec-arc" cx="55" cy="55" r="46" fill="none" stroke="#00ff41" stroke-width="5"
+          stroke-linecap="butt" stroke-dasharray="289.0" stroke-dashoffset="289.0"
+          transform="rotate(-90 55 55)"/>
+      </svg>
+      <div id="sec-num">0</div>
+    </div>
+    <div id="sec-label">SECONDS</div>
+  </div>
+
+  <div class="panel" id="cal-panel">
+    <div class="plabel">Calendar</div>
+    <div id="cal-month">March 2026</div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <div class="panel" id="weather-panel">
+    <div class="plabel">Weather &middot; Eastvale CA</div>
+    <div id="weather-temp-big">69&deg;F</div>
+    <div id="weather-cond">Clear</div>
+    <div id="weather-loc">EASTVALE, CA &middot; US</div>
+    <div class="forecast">
+      <div class="fc"><div class="fc-dn">WED</div><div class="fc-t">89&deg;</div></div>
+      <div class="fc"><div class="fc-dn">THU</div><div class="fc-t">89&deg;</div></div>
+      <div class="fc"><div class="fc-dn">FRI</div><div class="fc-t">89&deg;</div></div>
+      <div class="fc"><div class="fc-dn">SAT</div><div class="fc-t">92&deg;</div></div>
+      <div class="fc"><div class="fc-dn">SUN</div><div class="fc-t">91&deg;</div></div>
+    </div>
+  </div>
+
+  <div class="panel" id="misc-panel">
+    <div class="plabel">System Status</div>
+    <div>
+      <div class="stat-row"><span class="stat-key">DAY OF YEAR</span><span class="stat-val" id="doy">--</span></div>
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">WEEK</span><span class="stat-val" id="week-num">--</span></div>
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">DAY PROGRESS</span><span class="stat-val" id="day-pct">--%</span></div>
+      <div class="bar-mini"><div class="bar-mini-fill" id="day-bar" style="width:0%"></div></div>
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">YEAR PROGRESS</span><span class="stat-val" id="year-pct">--%</span></div>
+      <div class="bar-mini"><div class="bar-mini-fill" id="year-bar" style="width:0%"></div></div>
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">TIMEZONE</span><span class="stat-val" id="tz">--</span></div>
+    </div>
+    <div>
+      <div class="stat-row"><span class="stat-key">UNIX</span><span class="stat-val" id="unix-time">--</span></div>
+    </div>
+  </div>
+
+  <div id="bottombar">
+    <span>LOC: 33.9534N 117.3961W</span>
+    <span><span class="blink">&#9646;</span> ONLINE</span>
+    <span id="bottom-date">--</span>
+  </div>
+
+</div>
+
+<script>
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+const periods = [
+  { name: 'Midnight',  label: '[ MIDN ]',  range: '12:00 AM - 4:59 AM',  start: 0,  end: 5  },
+  { name: 'Dawn',      label: '[ DAWN ]',  range: '5:00 AM - 6:59 AM',   start: 5,  end: 7  },
+  { name: 'Morning',   label: '[ MORN ]',  range: '7:00 AM - 11:59 AM',  start: 7,  end: 12 },
+  { name: 'Afternoon', label: '[ AFTN ]',  range: '12:00 PM - 5:59 PM',  start: 12, end: 18 },
+  { name: 'Evening',   label: '[ EVNG ]',  range: '6:00 PM - 8:59 PM',   start: 18, end: 21 },
+  { name: 'Night',     label: '[ NITE ]',  range: '9:00 PM - 11:59 PM',  start: 21, end: 24 },
+];
+
+function pad(n) { return String(n).padStart(2,'0'); }
+function pad3(n) { return String(n).padStart(3,'0'); }
+
+function getWeek(d) {
+  const s = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  s.setUTCDate(s.getUTCDate() + 4 - (s.getUTCDay() || 7));
+  const y = new Date(Date.UTC(s.getUTCFullYear(), 0, 1));
+  return Math.ceil((((s - y) / 86400000) + 1) / 7);
+}
+
+function getDOY(d) {
+  return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+}
+
+let startTime = Date.now();
+
+function buildCalendar(year, month, today) {
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dn';
+    el.textContent = d[0];
+    grid.appendChild(el);
+  });
+  const first = new Date(year, month, 1).getDay();
+  const dim = new Date(year, month + 1, 0).getDate();
+  for (let i = 0; i < first; i++) {
+    const el = document.createElement('div'); el.className = 'cal-d empty'; el.textContent = ''; grid.appendChild(el);
+  }
+  for (let d = 1; d <= dim; d++) {
+    const el = document.createElement('div');
+    el.className = 'cal-d' + (d === today ? ' today' : '');
+    el.textContent = d;
+    grid.appendChild(el);
+  }
+}
+
+function tick() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
+
+  document.getElementById('clock-time').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  document.getElementById('clock-date').textContent = `${DAYS[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  document.getElementById('ms-val').textContent = pad3(ms);
+
+  const p = periods.find(p => h >= p.start && h < p.end) || periods[0];
+  document.getElementById('period-icon-text').textContent = p.label;
+  document.getElementById('period-name').textContent = p.name.toUpperCase();
+  document.getElementById('period-range').textContent = p.range;
+  const totalSec = (p.end - p.start) * 3600;
+  const elapsed = (h - p.start) * 3600 + m * 60 + s;
+  document.getElementById('period-bar-fill').style.width = Math.min(100, Math.round(elapsed / totalSec * 100)) + '%';
+
+  const circ = 289.0;
+  document.getElementById('sec-arc').setAttribute('stroke-dashoffset', (circ - (s / 60) * circ).toFixed(1));
+  document.getElementById('sec-num').textContent = s;
+
+  const dayElapsed = h * 3600 + m * 60 + s;
+  const dayPct = Math.round(dayElapsed / 86400 * 100);
+  document.getElementById('day-pct').textContent = dayPct + '%';
+  document.getElementById('day-bar').style.width = dayPct + '%';
+
+  const soy = new Date(now.getFullYear(), 0, 1);
+  const eoy = new Date(now.getFullYear() + 1, 0, 1);
+  const yearPct = Math.round((now - soy) / (eoy - soy) * 100);
+  document.getElementById('year-pct').textContent = yearPct + '%';
+  document.getElementById('year-bar').style.width = yearPct + '%';
+
+  document.getElementById('doy').textContent = getDOY(now);
+  document.getElementById('week-num').textContent = 'W' + pad(getWeek(now));
+  document.getElementById('tz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  document.getElementById('unix-time').textContent = Math.floor(Date.now() / 1000);
+
+  const el2 = Date.now() - startTime;
+  document.getElementById('uptime-label').textContent = `UPTIME: ${pad(Math.floor(el2/3600000))}:${pad(Math.floor((el2%3600000)/60000))}:${pad(Math.floor((el2%60000)/1000))}`;
+  document.getElementById('bottom-date').textContent = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+}
+
+buildCalendar(2026, 2, 25);
+tick();
+setInterval(tick, 100);
+
+(function() {
+  const c = document.getElementById('noise');
+  const ctx = c.getContext('2d');
+  function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  function drawNoise() {
+    const w = c.width, h = c.height;
+    const img = ctx.createImageData(w, h);
+    const d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.random() > 0.5 ? 255 : 0;
+      d[i] = 0; d[i+1] = v; d[i+2] = 0; d[i+3] = 30;
+    }
+    ctx.putImageData(img, 0, 0);
+    requestAnimationFrame(drawNoise);
+  }
+  drawNoise();
+})();
+</script>
+</body>
+</html>
