@@ -6,45 +6,44 @@
 <title>HUD</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
-  --green: #00ff41;
-  --green-dim: #00c832;
-  --green-dark: #007a1f;
-  --green-deeper: #003d0f;
-  --bg: #0a1a0d;
-  --panel: #061209;
-  --border: #005c14;
+  --green:#00ff41; --green-dim:#00c832; --green-dark:#007a1f;
+  --green-deeper:#003d0f; --bg:#0a1a0d; --panel:#061209; --border:#005c14;
 }
-html, body { width:100%; height:100%; background:var(--bg); color:var(--green); font-family:'Share Tech Mono',monospace; overflow:hidden; }
+html,body { width:100%; height:100%; background:var(--bg); color:var(--green); font-family:'Share Tech Mono',monospace; overflow:hidden; }
 @keyframes flicker { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.88} 94%{opacity:1} 97%{opacity:.94} 98%{opacity:1} }
-body { animation: flicker 6s infinite; }
+body { animation:flicker 6s infinite; }
 body::before {
   content:''; position:fixed; inset:0; pointer-events:none; z-index:1000;
-  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,0.22) 0px,rgba(0,0,0,0.22) 1px,transparent 1px,transparent 4px);
 }
 body::after {
   content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+  background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.65) 100%);
 }
 #noise { position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.04; }
-#tape { position:fixed; left:0; right:0; height:3px; background:rgba(0,255,65,0.12); pointer-events:none; z-index:998; animation:sweep 8s linear infinite; }
-@keyframes sweep { from{top:-4px} to{top:100vh} }
+.tape { position:fixed; left:0; right:0; height:3px; background:rgba(0,255,65,0.10); pointer-events:none; z-index:998; }
+#t1{animation:sweep 7s linear infinite 0s;}
+#t2{animation:sweep 7s linear infinite 1.75s;}
+#t3{animation:sweep 7s linear infinite 3.5s;}
+#t4{animation:sweep 7s linear infinite 5.25s;}
+@keyframes sweep{from{top:-4px}to{top:100vh}}
 
 #app {
   position:relative; z-index:2;
   width:100vw; height:100vh;
   display:grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto auto 1fr auto auto;
   grid-template-columns: 1fr 1fr 1fr;
-  gap:8px; padding:10px;
+  gap:7px; padding:9px;
 }
 
 /* TOP BAR */
 #topbar {
   grid-column:1/-1;
   display:flex; align-items:center; justify-content:space-between;
-  border-bottom:1px solid var(--border); padding-bottom:7px;
+  border-bottom:1px solid var(--border); padding-bottom:6px;
 }
 .sys-label { font-size:11px; letter-spacing:.22em; color:var(--green-dim); text-transform:uppercase; }
 .rec-dot { display:flex; align-items:center; gap:7px; font-size:10px; letter-spacing:.15em; color:var(--green-dark); }
@@ -52,100 +51,194 @@ body::after {
   content:''; display:inline-block; width:8px; height:8px; border-radius:50%;
   background:var(--green); box-shadow:0 0 6px var(--green); animation:pulse 1.4s ease-in-out infinite;
 }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.15} }
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.15}}
 
 /* PANELS */
 .panel { background:var(--panel); border:1px solid var(--border); padding:10px 12px; position:relative; overflow:hidden; }
 .panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--green-dark); }
 .plabel { font-size:9px; letter-spacing:.2em; color:var(--green-dark); text-transform:uppercase; margin-bottom:6px; }
 
-/* ── MERGED TOP ROW PANEL (spans all 3 cols) ── */
-#main-panel {
-  grid-column: 1/-1;
-  display:flex; align-items:center; gap:0;
-}
-
-/* Clock section */
-#mp-clock {
-  flex:2; border-right:1px solid var(--border);
-  padding-right:16px; margin-right:16px;
-}
-#clock-time {
-  font-size: clamp(38px, 5.5vw, 72px);
-  color:var(--green); letter-spacing:.06em; line-height:1;
-  text-shadow:0 0 16px rgba(0,255,65,.7);
-}
-#clock-date { font-size:12px; color:var(--green-dim); margin-top:5px; letter-spacing:.06em; }
-#clock-ms   { font-size:10px; color:var(--green-dark); margin-top:3px; }
-
-/* Seconds ring section */
-#mp-seconds {
-  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  border-right:1px solid var(--border); padding-right:16px; margin-right:16px;
-}
-#sec-wrap { position:relative; width:90px; height:90px; }
+/* MERGED TOP ROW */
+#main-panel { grid-column:1/-1; display:flex; align-items:center; gap:0; }
+#mp-clock { flex:2; border-right:1px solid var(--border); padding-right:16px; margin-right:16px; }
+#clock-time { font-size:clamp(36px,5vw,68px); color:var(--green); letter-spacing:.06em; line-height:1; text-shadow:0 0 16px rgba(0,255,65,.7); }
+#clock-date { font-size:11px; color:var(--green-dim); margin-top:4px; letter-spacing:.06em; }
+#clock-ms   { font-size:10px; color:var(--green-dark); margin-top:2px; }
+#clock-tz   { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.06em; }
+#mp-seconds { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-right:1px solid var(--border); padding-right:16px; margin-right:16px; }
+#sec-wrap { position:relative; width:86px; height:86px; }
 #sec-wrap svg { position:absolute; top:0; left:0; }
-#sec-num {
-  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-  font-size:24px; color:var(--green); text-shadow:0 0 8px rgba(0,255,65,.6);
-}
-#sec-sub { font-size:9px; color:var(--green-dark); letter-spacing:.15em; margin-top:5px; }
-
-/* Time-of-day section */
-#mp-period {
-  flex:1.2; display:flex; flex-direction:column; justify-content:center; gap:5px;
-}
-#period-icon-text {
-  font-size:20px; letter-spacing:.06em; color:var(--green);
-  text-shadow:0 0 10px rgba(0,255,65,.5);
-}
-#period-name  { font-size:15px; color:var(--green); letter-spacing:.14em; text-shadow:0 0 8px rgba(0,255,65,.4); }
+#sec-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; color:var(--green); text-shadow:0 0 8px rgba(0,255,65,.6); }
+#sec-sub { font-size:9px; color:var(--green-dark); letter-spacing:.15em; margin-top:4px; }
+#mp-period { flex:1.2; display:flex; flex-direction:column; justify-content:center; gap:4px; }
+#period-icon-text { font-size:18px; letter-spacing:.06em; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.5); }
+#period-name  { font-size:14px; color:var(--green); letter-spacing:.14em; text-shadow:0 0 8px rgba(0,255,65,.4); }
 #period-range { font-size:10px; color:var(--green-dark); }
 #period-bar-bg { width:100%; height:3px; background:var(--green-deeper); overflow:hidden; margin-top:4px; }
 #period-bar-fill { height:3px; background:var(--green); transition:width 1s linear; }
 
-/* ── BOTTOM ROW ── */
+/* COUNTDOWN */
+#countdown-panel { grid-column:1; padding:8px 14px; }
+#stopwatch-panel { grid-column:2; }
+#misc-panel { grid-column:3; display:flex; flex-direction:column; gap:7px; }
+#cd-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:5px; }
+#cd-label-display { font-size:12px; color:var(--green); letter-spacing:.12em; text-transform:uppercase; text-shadow:0 0 8px rgba(0,255,65,.4); flex:1; min-width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#cd-digits { font-size:clamp(16px,2.6vw,30px); color:var(--green); letter-spacing:.08em; text-shadow:0 0 12px rgba(0,255,65,.6); white-space:nowrap; }
+#cd-digits.done { animation:pulse 0.6s ease-in-out infinite; }
+#cd-setup { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+#cd-name-input {
+  background:var(--green-deeper); border:1px solid var(--border); color:var(--green);
+  font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 6px;
+  letter-spacing:.08em; outline:none; width:120px;
+}
+#cd-name-input::placeholder { color:var(--green-dark); }
+#cd-dt-input {
+  background:var(--green-deeper); border:1px solid var(--border); color:var(--green);
+  font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 6px;
+  letter-spacing:.04em; outline:none; color-scheme:dark;
+}
+#cd-set-btn {
+  background:none; border:1px solid var(--border); color:var(--green-dark);
+  font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 10px;
+  letter-spacing:.1em; cursor:pointer; text-transform:uppercase;
+}
+#cd-set-btn:hover { color:var(--green); border-color:var(--green-dim); }
+#cd-progress-bg { height:2px; background:var(--green-deeper); overflow:hidden; }
+#cd-progress-fill { height:2px; background:var(--green-dim); transition:width 0.5s linear; width:0%; }
+
+/* STOPWATCH */
+#stopwatch-panel { padding:8px 14px; display:flex; flex-direction:column; gap:5px; }
+#sw-display { font-size:clamp(20px,3vw,36px); color:var(--green); letter-spacing:.1em; text-shadow:0 0 12px rgba(0,255,65,.6); line-height:1; }
+#sw-ms { font-size:11px; color:var(--green-dark); letter-spacing:.08em; }
+#sw-btns { display:flex; gap:6px; }
+.sw-btn { background:none; border:1px solid var(--border); color:var(--green-dark); font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 12px; letter-spacing:.12em; cursor:pointer; text-transform:uppercase; }
+.sw-btn:hover { color:var(--green); border-color:var(--green-dim); }
+.sw-btn.active { color:var(--green); border-color:var(--green); }
+#sw-laps { max-height:52px; overflow-y:auto; margin-top:2px; }
+#sw-laps::-webkit-scrollbar { width:3px; }
+#sw-laps::-webkit-scrollbar-thumb { background:var(--border); }
+.sw-lap { font-size:9px; color:var(--green-dark); letter-spacing:.08em; padding:1px 0; border-bottom:1px solid var(--green-deeper); display:flex; justify-content:space-between; }
+.sw-lap .lap-t { color:var(--green-dim); }
+
 /* CALENDAR */
 #cal-panel { grid-column:1; }
-#cal-month { font-size:12px; color:var(--green-dim); margin-bottom:6px; letter-spacing:.1em; text-transform:uppercase; }
+#cal-month { font-size:12px; color:var(--green-dim); margin-bottom:5px; letter-spacing:.1em; text-transform:uppercase; }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.cal-dn { text-align:center; font-size:9px; color:var(--green-dark); padding-bottom:3px; }
-.cal-d  { text-align:center; font-size:11px; padding:4px 2px; color:var(--green-dark); }
+.cal-dn { text-align:center; font-size:9px; color:var(--green-dark); padding-bottom:2px; }
+.cal-d  { text-align:center; font-size:11px; padding:3px 2px; color:var(--green-dark); }
 .cal-d.today { background:var(--green); color:#000; font-weight:700; text-shadow:none; }
 .cal-d.empty { visibility:hidden; }
 
 /* WEATHER */
 #weather-panel { grid-column:2; }
-#weather-temp-big { font-size:34px; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.5); line-height:1; }
-#weather-cond { font-size:11px; color:var(--green-dim); margin-top:4px; text-transform:uppercase; letter-spacing:.1em; }
+#weather-temp-big { font-size:32px; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.5); line-height:1; }
+#weather-cond { font-size:12px; color:var(--green-dim); margin-top:3px; text-transform:uppercase; letter-spacing:.1em; }
+#weather-icon { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.06em; }
 #weather-loc  { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.08em; }
-.forecast { display:flex; gap:5px; margin-top:8px; }
-.fc { flex:1; border:1px solid var(--border); padding:5px 4px; text-align:center; }
+.forecast { display:flex; gap:4px; margin-top:7px; }
+.fc { flex:1; border:1px solid var(--border); padding:4px 3px; text-align:center; }
 .fc-dn { font-size:9px; color:var(--green-dark); }
-.fc-t  { font-size:11px; color:var(--green-dim); margin-top:3px; }
+.fc-t  { font-size:11px; color:var(--green-dim); margin-top:2px; }
 
 /* STATUS */
-#misc-panel { grid-column:3; display:flex; flex-direction:column; gap:8px; }
 .stat-row { display:flex; justify-content:space-between; align-items:center; font-size:10px; }
 .stat-key { color:var(--green-dark); letter-spacing:.08em; }
 .stat-val { color:var(--green); font-size:10px; }
-.bar-mini { height:2px; background:var(--green-deeper); overflow:hidden; margin-top:3px; }
+.bar-mini { height:2px; background:var(--green-deeper); overflow:hidden; margin-top:2px; }
 .bar-mini-fill { height:2px; background:var(--green-dim); transition:width 1s; }
+
+/* NEWS TICKER */
+#ticker-bar {
+  grid-column:3; grid-row: auto;
+  background:var(--panel); border:1px solid var(--border); padding:10px 12px;
+  display:flex; flex-direction:column; gap:0; overflow:hidden; position:relative;
+}
+#ticker-bar::after { content:""; position:absolute; top:0; left:0; right:0; height:1px; background:var(--green-dark); }
+#ticker-tag { color:var(--green); font-size:9px; letter-spacing:.2em; margin-bottom:6px; text-transform:uppercase; }
+#ticker-list { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:5px; }
+#ticker-list::-webkit-scrollbar { width:3px; }
+#ticker-list::-webkit-scrollbar-thumb { background:var(--border); }
+.t-item { font-size:9px; color:var(--green-dim); letter-spacing:.05em; line-height:1.4; border-bottom:1px solid var(--green-deeper); padding-bottom:4px; }
+.t-item:last-child { border-bottom:none; }
+.t-num { color:var(--green-dark); margin-right:4px; }
 
 /* BOTTOM BAR */
 #bottombar {
-  grid-column:1/-1;
-  display:flex; align-items:center; justify-content:space-between;
-  border-top:1px solid var(--border); padding-top:7px;
+  grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
+  border-top:1px solid var(--border); padding-top:6px;
   font-size:10px; color:var(--green-dark); letter-spacing:.1em;
 }
 .blink { animation:blink 1s step-end infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* EARTHQUAKE */
+#quake-overlay {
+  display:none; position:fixed; inset:0; z-index:2000;
+  background:rgba(0,0,0,0.88);
+  flex-direction:column; align-items:center; justify-content:center; gap:16px;
+}
+#quake-overlay.active { display:flex; animation:quake-flash 0.3s ease-in-out infinite alternate; }
+@keyframes quake-flash{from{background:rgba(0,0,0,0.88)}to{background:rgba(0,40,0,0.92)}}
+#quake-title {
+  font-size:clamp(40px,8vw,80px); color:var(--green); letter-spacing:.18em;
+  text-shadow:0 0 30px rgba(0,255,65,1),0 0 60px rgba(0,255,65,0.6);
+  text-align:center; animation:shake 0.15s linear infinite;
+}
+@keyframes shake{
+  0%{transform:translate(0,0) rotate(0deg)}
+  20%{transform:translate(-3px,2px) rotate(-.5deg)}
+  40%{transform:translate(3px,-2px) rotate(.5deg)}
+  60%{transform:translate(-2px,3px) rotate(-.3deg)}
+  80%{transform:translate(2px,-1px) rotate(.3deg)}
+  100%{transform:translate(0,0) rotate(0deg)}
+}
+#quake-info { font-size:14px; color:var(--green-dim); letter-spacing:.12em; text-align:center; }
+#quake-dismiss { font-size:11px; color:var(--green-dark); letter-spacing:.15em; cursor:pointer; margin-top:8px; }
+#quake-dismiss:hover { color:var(--green); }
+#rock-wrap { position:relative; width:120px; height:160px; }
+#rock-svg { position:absolute; animation:rock-fall 1.4s ease-in infinite; }
+@keyframes rock-fall{
+  0%{top:0;opacity:1;transform:rotate(0deg) scale(1)}
+  80%{top:110px;opacity:1;transform:rotate(160deg) scale(1.1)}
+  85%{top:118px;opacity:1;transform:rotate(170deg) scale(1.15)}
+  100%{top:118px;opacity:0;transform:rotate(180deg) scale(.9)}
+}
+#dust {
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:80px; height:20px; opacity:0;
+  animation:dust-puff 1.4s ease-in infinite;
+}
+@keyframes dust-puff{0%{opacity:0;transform:translateX(-50%) scaleX(.2)}82%{opacity:0;transform:translateX(-50%) scaleX(.2)}90%{opacity:.6;transform:translateX(-50%) scaleX(1)}100%{opacity:0;transform:translateX(-50%) scaleX(1.4)}}
 </style>
 </head>
 <body>
 <canvas id="noise"></canvas>
-<div id="tape"></div>
+<div class="tape" id="t1"></div>
+<div class="tape" id="t2"></div>
+<div class="tape" id="t3"></div>
+<div class="tape" id="t4"></div>
+
+<!-- EARTHQUAKE OVERLAY -->
+<div id="quake-overlay">
+  <div id="quake-title">EARTHQUAKE</div>
+  <div id="rock-wrap">
+    <svg id="rock-svg" width="64" height="64" viewBox="0 0 64 64">
+      <polygon points="32,4 54,14 60,34 50,58 20,60 6,44 8,20 22,6" fill="#004d10" stroke="#00ff41" stroke-width="2"/>
+      <line x1="32" y1="4"  x2="40" y2="24" stroke="#00ff41" stroke-width="1" opacity=".6"/>
+      <line x1="40" y1="24" x2="50" y2="34" stroke="#00ff41" stroke-width="1" opacity=".6"/>
+      <line x1="22" y1="30" x2="34" y2="44" stroke="#00ff41" stroke-width="1" opacity=".4"/>
+      <polygon points="22,6 38,8 36,22 20,18" fill="#006618" opacity=".7"/>
+    </svg>
+    <svg id="dust" viewBox="0 0 80 20">
+      <ellipse cx="40" cy="12" rx="36" ry="8" fill="#003d0f" opacity=".8"/>
+      <ellipse cx="20" cy="10" rx="12" ry="5" fill="#004d10" opacity=".6"/>
+      <ellipse cx="60" cy="10" rx="10" ry="4" fill="#004d10" opacity=".6"/>
+    </svg>
+  </div>
+  <div id="quake-info">M-- -- NEAR EASTVALE CA</div>
+  <div id="quake-dismiss">&gt; TAP TO DISMISS &lt;</div>
+</div>
+
 <div id="app">
 
   <!-- TOP BAR -->
@@ -157,18 +250,17 @@ body::after {
 
   <!-- MERGED: clock + seconds + period -->
   <div class="panel" id="main-panel">
-    <!-- Clock -->
     <div id="mp-clock">
       <div class="plabel">24H Clock</div>
       <div id="clock-time">--:--:--</div>
       <div id="clock-date">Loading...</div>
       <div id="clock-ms">MS: <span id="ms-val">000</span></div>
+      <div id="clock-tz">TZ: America/Los_Angeles</div>
     </div>
-    <!-- Seconds -->
     <div id="mp-seconds">
       <div class="plabel">Seconds</div>
       <div id="sec-wrap">
-        <svg width="90" height="90" viewBox="0 0 110 110">
+        <svg width="86" height="86" viewBox="0 0 110 110">
           <circle cx="55" cy="55" r="46" fill="none" stroke="#003d0f" stroke-width="5"/>
           <circle id="sec-arc" cx="55" cy="55" r="46" fill="none" stroke="#00ff41" stroke-width="5"
             stroke-linecap="butt" stroke-dasharray="289.0" stroke-dashoffset="289.0"
@@ -178,7 +270,6 @@ body::after {
       </div>
       <div id="sec-sub">SEC</div>
     </div>
-    <!-- Period -->
     <div id="mp-period">
       <div class="plabel">Time of Day</div>
       <div id="period-icon-text">[ -- ]</div>
@@ -188,26 +279,33 @@ body::after {
     </div>
   </div>
 
-  <!-- CALENDAR -->
-  <div class="panel" id="cal-panel">
-    <div class="plabel">Calendar</div>
-    <div id="cal-month">March 2026</div>
-    <div class="cal-grid" id="cal-grid"></div>
+  <!-- COUNTDOWN TIMER -->
+  <div class="panel" id="countdown-panel">
+    <div class="plabel">Countdown</div>
+    <div id="cd-top">
+      <div id="cd-label-display">-- SET A COUNTDOWN --</div>
+      <div id="cd-digits">--D --H --M --S</div>
+    </div>
+    <div id="cd-setup">
+      <input type="text" id="cd-name-input" placeholder="Label (e.g. Summer Break)" maxlength="28"/>
+      <input type="datetime-local" id="cd-dt-input"/>
+      <button id="cd-set-btn">SET</button>
+      <button id="cd-clear-btn" style="background:none;border:1px solid var(--border);color:var(--green-dark);font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 10px;letter-spacing:.1em;cursor:pointer;text-transform:uppercase;">CLR</button>
+    </div>
+    <div id="cd-progress-bg" style="margin-top:6px;"><div id="cd-progress-fill"></div></div>
   </div>
 
-  <!-- WEATHER -->
-  <div class="panel" id="weather-panel">
-    <div class="plabel">Weather &middot; Eastvale CA</div>
-    <div id="weather-temp-big">69&deg;F</div>
-    <div id="weather-cond">Clear</div>
-    <div id="weather-loc">EASTVALE, CA &middot; US</div>
-    <div class="forecast">
-      <div class="fc"><div class="fc-dn">WED</div><div class="fc-t">89&deg;</div></div>
-      <div class="fc"><div class="fc-dn">THU</div><div class="fc-t">89&deg;</div></div>
-      <div class="fc"><div class="fc-dn">FRI</div><div class="fc-t">89&deg;</div></div>
-      <div class="fc"><div class="fc-dn">SAT</div><div class="fc-t">92&deg;</div></div>
-      <div class="fc"><div class="fc-dn">SUN</div><div class="fc-t">91&deg;</div></div>
+  <!-- STOPWATCH -->
+  <div class="panel" id="stopwatch-panel">
+    <div class="plabel">Stopwatch</div>
+    <div id="sw-display">00:00:00</div>
+    <div id="sw-ms">MS: 000</div>
+    <div id="sw-btns">
+      <button class="sw-btn" id="sw-start">START</button>
+      <button class="sw-btn" id="sw-lap">LAP</button>
+      <button class="sw-btn" id="sw-reset">RESET</button>
     </div>
+    <div id="sw-laps"></div>
   </div>
 
   <!-- STATUS -->
@@ -223,8 +321,37 @@ body::after {
       <div class="stat-row"><span class="stat-key">YEAR PROGRESS</span><span class="stat-val" id="year-pct">--%</span></div>
       <div class="bar-mini"><div class="bar-mini-fill" id="year-bar" style="width:0%"></div></div>
     </div>
-    <div><div class="stat-row"><span class="stat-key">TIMEZONE</span><span class="stat-val" id="tz">--</span></div></div>
+    <div><div class="stat-row"><span class="stat-key">QUAKE CHECK</span><span class="stat-val" id="quake-status">--</span></div></div>
     <div><div class="stat-row"><span class="stat-key">UNIX</span><span class="stat-val" id="unix-time">--</span></div></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="panel" id="cal-panel">
+    <div class="plabel">Calendar</div>
+    <div id="cal-month"></div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- WEATHER -->
+  <div class="panel" id="weather-panel">
+    <div class="plabel">Weather &middot; Eastvale CA</div>
+    <div id="weather-temp-big">89&deg;F</div>
+    <div id="weather-cond">Partly Sunny</div>
+    <div id="weather-icon">[ PART-CLOUD / SUN ]</div>
+    <div id="weather-loc">EASTVALE, CA &middot; US</div>
+    <div class="forecast">
+      <div class="fc"><div class="fc-dn">THU</div><div class="fc-t">90&deg;</div></div>
+      <div class="fc"><div class="fc-dn">FRI</div><div class="fc-t">90&deg;</div></div>
+      <div class="fc"><div class="fc-dn">SAT</div><div class="fc-t">90&deg;</div></div>
+      <div class="fc"><div class="fc-dn">SUN</div><div class="fc-t">90&deg;</div></div>
+      <div class="fc"><div class="fc-dn">MON</div><div class="fc-t">82&deg;</div></div>
+    </div>
+  </div>
+
+  <!-- NEWS TICKER (col 3, middle row) -->
+  <div id="ticker-bar">
+    <div class="plabel">// Live News //</div>
+    <div id="ticker-list"><div class="t-item">Loading headlines...</div></div>
   </div>
 
   <!-- BOTTOM BAR -->
@@ -238,6 +365,7 @@ body::after {
 <script>
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 const periods=[
   {name:'Midnight',label:'[ MIDN ]',range:'12:00 AM - 4:59 AM',start:0,end:5},
   {name:'Dawn',    label:'[ DAWN ]',range:'5:00 AM - 6:59 AM', start:5,end:7},
@@ -257,24 +385,84 @@ function getWeek(d){
 function getDOY(d){return Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);}
 let startTime=Date.now();
 
-function buildCalendar(year,month,today){
+/* ── CALENDAR ── */
+function buildCalendar(){
+  const now=new Date();
+  const year=now.getFullYear(), month=now.getMonth(), todayDate=now.getDate();
+  document.getElementById('cal-month').textContent=MONTHS_SHORT[month]+' '+year;
   const grid=document.getElementById('cal-grid');
   grid.innerHTML='';
   DAYS.forEach(d=>{const el=document.createElement('div');el.className='cal-dn';el.textContent=d[0];grid.appendChild(el);});
   const first=new Date(year,month,1).getDay();
   const dim=new Date(year,month+1,0).getDate();
   for(let i=0;i<first;i++){const el=document.createElement('div');el.className='cal-d empty';el.textContent='';grid.appendChild(el);}
-  for(let d=1;d<=dim;d++){const el=document.createElement('div');el.className='cal-d'+(d===today?' today':'');el.textContent=d;grid.appendChild(el);}
+  for(let d=1;d<=dim;d++){const el=document.createElement('div');el.className='cal-d'+(d===todayDate?' today':'');el.textContent=d;grid.appendChild(el);}
 }
 
+/* ── COUNTDOWN ── */
+let cdTarget=null, cdLabel='', cdStart=null;
+
+function loadCD(){
+  try {
+    const s=localStorage.getItem('hud_cd');
+    if(s){const o=JSON.parse(s);cdTarget=o.t;cdLabel=o.l;cdStart=o.s;}
+  } catch(e){}
+}
+function saveCD(){
+  try{localStorage.setItem('hud_cd',JSON.stringify({t:cdTarget,l:cdLabel,s:cdStart}));}catch(e){}
+}
+
+document.getElementById('cd-set-btn').addEventListener('click',()=>{
+  const name=document.getElementById('cd-name-input').value.trim();
+  const dt=document.getElementById('cd-dt-input').value;
+  if(!dt) return;
+  cdTarget=new Date(dt).getTime();
+  cdLabel=name||'COUNTDOWN';
+  cdStart=Date.now();
+  document.getElementById('cd-digits').classList.remove('done');
+  saveCD();
+});
+document.getElementById('cd-clear-btn').addEventListener('click',()=>{
+  cdTarget=null; cdLabel=''; cdStart=null;
+  document.getElementById('cd-label-display').textContent='-- SET A COUNTDOWN --';
+  document.getElementById('cd-digits').textContent='--D --H --M --S';
+  document.getElementById('cd-digits').classList.remove('done');
+  document.getElementById('cd-progress-fill').style.width='0%';
+  try{localStorage.removeItem('hud_cd');}catch(e){}
+});
+
+function tickCountdown(){
+  if(!cdTarget) return;
+  const now=Date.now();
+  const diff=cdTarget-now;
+  const el=document.getElementById('cd-digits');
+  const lbl=document.getElementById('cd-label-display');
+  lbl.textContent=cdLabel.toUpperCase();
+  if(diff<=0){
+    el.textContent='[ TARGET REACHED ]';
+    el.classList.add('done');
+    document.getElementById('cd-progress-fill').style.width='100%';
+    return;
+  }
+  el.classList.remove('done');
+  const totalD=Math.floor(diff/86400000);
+  const totalH=Math.floor((diff%86400000)/3600000);
+  const totalM=Math.floor((diff%3600000)/60000);
+  const totalS=Math.floor((diff%60000)/1000);
+  el.textContent=`${pad(totalD)}D ${pad(totalH)}H ${pad(totalM)}M ${pad(totalS)}S`;
+  if(cdStart&&cdStart<cdTarget){
+    const pct=Math.max(0,Math.min(100,100-(diff/(cdTarget-cdStart)*100)));
+    document.getElementById('cd-progress-fill').style.width=pct.toFixed(1)+'%';
+  }
+}
+
+/* ── MAIN TICK ── */
 function tick(){
   const now=new Date();
   const h=now.getHours(),m=now.getMinutes(),s=now.getSeconds(),ms=now.getMilliseconds();
-
   document.getElementById('clock-time').textContent=`${pad(h)}:${pad(m)}:${pad(s)}`;
   document.getElementById('clock-date').textContent=`${DAYS[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
   document.getElementById('ms-val').textContent=pad3(ms);
-
   const p=periods.find(p=>h>=p.start&&h<p.end)||periods[0];
   document.getElementById('period-icon-text').textContent=p.label;
   document.getElementById('period-name').textContent=p.name.toUpperCase();
@@ -282,36 +470,74 @@ function tick(){
   const totalSec=(p.end-p.start)*3600;
   const elapsed=(h-p.start)*3600+m*60+s;
   document.getElementById('period-bar-fill').style.width=Math.min(100,Math.round(elapsed/totalSec*100))+'%';
-
   const circ=289.0;
   document.getElementById('sec-arc').setAttribute('stroke-dashoffset',(circ-(s/60)*circ).toFixed(1));
   document.getElementById('sec-num').textContent=s;
-
   const dayElapsed=h*3600+m*60+s;
   const dayPct=Math.round(dayElapsed/86400*100);
   document.getElementById('day-pct').textContent=dayPct+'%';
   document.getElementById('day-bar').style.width=dayPct+'%';
-
   const soy=new Date(now.getFullYear(),0,1);
   const eoy=new Date(now.getFullYear()+1,0,1);
   const yearPct=Math.round((now-soy)/(eoy-soy)*100);
   document.getElementById('year-pct').textContent=yearPct+'%';
   document.getElementById('year-bar').style.width=yearPct+'%';
-
   document.getElementById('doy').textContent=getDOY(now);
   document.getElementById('week-num').textContent='W'+pad(getWeek(now));
-  document.getElementById('tz').textContent=Intl.DateTimeFormat().resolvedOptions().timeZone;
   document.getElementById('unix-time').textContent=Math.floor(Date.now()/1000);
-
   const el2=Date.now()-startTime;
   document.getElementById('uptime-label').textContent=`UPTIME: ${pad(Math.floor(el2/3600000))}:${pad(Math.floor((el2%3600000)/60000))}:${pad(Math.floor((el2%60000)/1000))}`;
   document.getElementById('bottom-date').textContent=`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  tickCountdown();
 }
 
-buildCalendar(2026,2,25);
-tick();
-setInterval(tick,100);
+/* ── NEWS via Hacker News API (no key, full CORS) ── */
+function loadNews(){
+  const list=document.getElementById('ticker-list');
+  list.innerHTML="<div class='t-item'>Fetching...</div>";
+  fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+    .then(r=>r.json())
+    .then(ids=>{
+      const top=ids.slice(0,15);
+      return Promise.all(top.map(id=>
+        fetch('https://hacker-news.firebaseio.com/v0/item/'+id+'.json').then(r=>r.json())
+      ));
+    })
+    .then(stories=>{
+      list.innerHTML=stories
+        .filter(s=>s&&s.title)
+        .map((s,i)=>`<div class='t-item'><span class='t-num'>${String(i+1).padStart(2,'0')}.</span>${s.title}</div>`)
+        .join('');
+    })
+    .catch(()=>{
+      list.innerHTML="<div class='t-item'>NEWS FEED UNAVAILABLE</div>";
+    });
+}
 
+/* ── EARTHQUAKE ── */
+const LAT=33.9534,LON=-117.3961,MIN_MAG=2.5;
+let lastQuakeId=null;
+function checkEarthquakes(){
+  const url=`https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&latitude=${LAT}&longitude=${LON}&maxradius=1.5&minmagnitude=${MIN_MAG}&limit=1&orderby=time`;
+  fetch(url).then(r=>r.json()).then(data=>{
+    document.getElementById('quake-status').textContent='OK';
+    if(data.features&&data.features.length>0){
+      const q=data.features[0];
+      if(Date.now()-q.properties.time<600000&&q.id!==lastQuakeId){
+        lastQuakeId=q.id;
+        const mag=q.properties.mag?q.properties.mag.toFixed(1):'?';
+        const place=(q.properties.place||'NEAR EASTVALE CA').toUpperCase();
+        document.getElementById('quake-info').textContent=`M${mag}  ${place}`;
+        document.getElementById('quake-overlay').classList.add('active');
+      }
+    }
+  }).catch(()=>{ document.getElementById('quake-status').textContent='ERR'; });
+}
+document.getElementById('quake-overlay').addEventListener('click',()=>{
+  document.getElementById('quake-overlay').classList.remove('active');
+});
+
+/* ── GRAIN NOISE ── */
 (function(){
   const c=document.getElementById('noise');
   const ctx=c.getContext('2d');
@@ -320,6 +546,7 @@ setInterval(tick,100);
   window.addEventListener('resize',resize);
   function drawNoise(){
     const w=c.width,h=c.height;
+    if(!w||!h){requestAnimationFrame(drawNoise);return;}
     const img=ctx.createImageData(w,h);
     const d=img.data;
     for(let i=0;i<d.length;i+=4){const v=Math.random()>.5?255:0;d[i]=0;d[i+1]=v;d[i+2]=0;d[i+3]=30;}
@@ -328,6 +555,72 @@ setInterval(tick,100);
   }
   drawNoise();
 })();
+
+/* ── INIT ── */
+loadCD();
+buildCalendar();
+tick();
+setInterval(tick,100);
+setInterval(buildCalendar,60000);
+checkEarthquakes();
+setInterval(checkEarthquakes,30000);
+loadNews();
+setInterval(loadNews,300000); // refresh news every 5 min
+/* ── STOPWATCH ── */
+let swRunning=false, swElapsed=0, swStarted=0, swLaps=[], swLapStart=0;
+
+function swFormat(ms){
+  const h=Math.floor(ms/3600000);
+  const m=Math.floor((ms%3600000)/60000);
+  const s=Math.floor((ms%60000)/1000);
+  return pad(h)+':'+pad(m)+':'+pad(s);
+}
+
+function swRender(){
+  const total = swRunning ? swElapsed+(Date.now()-swStarted) : swElapsed;
+  document.getElementById('sw-display').textContent=swFormat(total);
+  document.getElementById('sw-ms').textContent='MS: '+pad3(Math.floor(total%1000));
+}
+
+document.getElementById('sw-start').addEventListener('click',()=>{
+  const btn=document.getElementById('sw-start');
+  if(!swRunning){
+    swStarted=Date.now();
+    if(swLapStart===0) swLapStart=Date.now();
+    swRunning=true;
+    btn.textContent='STOP';
+    btn.classList.add('active');
+  } else {
+    swElapsed+=Date.now()-swStarted;
+    swRunning=false;
+    btn.textContent='START';
+    btn.classList.remove('active');
+  }
+});
+
+document.getElementById('sw-lap').addEventListener('click',()=>{
+  if(!swRunning) return;
+  const total=swElapsed+(Date.now()-swStarted);
+  const lapTime=total-(swLaps.reduce((a,l)=>a+l.ms,0));
+  swLaps.push({n:swLaps.length+1,ms:lapTime,total:total});
+  const div=document.createElement('div');
+  div.className='sw-lap';
+  div.innerHTML='<span>LAP '+pad(swLaps.length)+'</span><span class="lap-t">'+swFormat(lapTime)+'</span><span>'+swFormat(total)+'</span>';
+  const lapsEl=document.getElementById('sw-laps');
+  lapsEl.insertBefore(div,lapsEl.firstChild);
+});
+
+document.getElementById('sw-reset').addEventListener('click',()=>{
+  swRunning=false; swElapsed=0; swStarted=0; swLaps=[]; swLapStart=0;
+  document.getElementById('sw-start').textContent='START';
+  document.getElementById('sw-start').classList.remove('active');
+  document.getElementById('sw-display').textContent='00:00:00';
+  document.getElementById('sw-ms').textContent='MS: 000';
+  document.getElementById('sw-laps').innerHTML='';
+});
+
+setInterval(()=>{ if(swRunning) swRender(); },50);
+
 </script>
 </body>
 </html>
