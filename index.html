@@ -9,9 +9,9 @@
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
   --green:#00ff41; --green-dim:#00c832; --green-dark:#007a1f;
-  --green-deeper:#003d0f; --bg:#0a1a0d; --panel:#061209; --border:#005c14;
+  --green-deeper:#003d0f; --bg:#0a1a0d; --panel:rgba(6,18,9,0.85); --border:#005c14;
 }
-html,body { width:100%; height:100%; background:var(--bg); color:var(--green); font-family:'Share Tech Mono',monospace; overflow:hidden; }
+html,body { width:100%; height:100%; background:#000000; color:var(--green); font-family:'Share Tech Mono',monospace; overflow:hidden; }
 @keyframes flicker { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.88} 94%{opacity:1} 97%{opacity:.94} 98%{opacity:1} }
 body { animation:flicker 6s infinite; }
 body::before {
@@ -22,12 +22,8 @@ body::after {
   content:''; position:fixed; inset:0; pointer-events:none; z-index:999;
   background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.65) 100%);
 }
-#noise { position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.04; }
-.tape { position:fixed; left:0; right:0; height:3px; background:rgba(0,255,65,0.10); pointer-events:none; z-index:998; }
-#t1{animation:sweep 7s linear infinite 0s;}
-#t2{animation:sweep 7s linear infinite 1.75s;}
-#t3{animation:sweep 7s linear infinite 3.5s;}
-#t4{animation:sweep 7s linear infinite 5.25s;}
+#noise { position:fixed; inset:0; pointer-events:none; z-index:1; opacity:0.45; }
+#tape { position:fixed; left:0; right:0; height:2px; background:rgba(0,255,65,0.18); pointer-events:none; z-index:998; animation:sweep 8s linear infinite; }
 @keyframes sweep{from{top:-4px}to{top:100vh}}
 
 #app {
@@ -61,18 +57,18 @@ body::after {
 /* MERGED TOP ROW */
 #main-panel { grid-column:1/-1; display:flex; align-items:center; gap:0; }
 #mp-clock { flex:2; border-right:1px solid var(--border); padding-right:16px; margin-right:16px; }
-#clock-time { font-size:clamp(36px,5vw,68px); color:var(--green); letter-spacing:.06em; line-height:1; text-shadow:0 0 16px rgba(0,255,65,.7); }
+#clock-time { font-size:clamp(36px,5vw,68px); color:var(--green); letter-spacing:.06em; line-height:1; text-shadow:0 0 8px #00ff41, 0 0 20px #00ff41, 0 0 40px #00c832; }
 #clock-date { font-size:11px; color:var(--green-dim); margin-top:4px; letter-spacing:.06em; }
 #clock-ms   { font-size:10px; color:var(--green-dark); margin-top:2px; }
 #clock-tz   { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.06em; }
 #mp-seconds { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-right:1px solid var(--border); padding-right:16px; margin-right:16px; }
 #sec-wrap { position:relative; width:86px; height:86px; }
 #sec-wrap svg { position:absolute; top:0; left:0; }
-#sec-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; color:var(--green); text-shadow:0 0 8px rgba(0,255,65,.6); }
+#sec-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:22px; color:var(--green); text-shadow:0 0 6px #00ff41, 0 0 16px #00c832; }
 #sec-sub { font-size:9px; color:var(--green-dark); letter-spacing:.15em; margin-top:4px; }
 #mp-period { flex:1.2; display:flex; flex-direction:column; justify-content:center; gap:4px; }
-#period-icon-text { font-size:18px; letter-spacing:.06em; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.5); }
-#period-name  { font-size:14px; color:var(--green); letter-spacing:.14em; text-shadow:0 0 8px rgba(0,255,65,.4); }
+#period-icon-text { font-size:18px; letter-spacing:.06em; color:var(--green); text-shadow:0 0 6px #00ff41, 0 0 18px #00c832; }
+#period-name  { font-size:14px; color:var(--green); letter-spacing:.14em; text-shadow:0 0 6px #00ff41, 0 0 16px #00c832; }
 #period-range { font-size:10px; color:var(--green-dark); }
 #period-bar-bg { width:100%; height:3px; background:var(--green-deeper); overflow:hidden; margin-top:4px; }
 #period-bar-fill { height:3px; background:var(--green); transition:width 1s linear; }
@@ -82,8 +78,8 @@ body::after {
 #stopwatch-panel { grid-column:2; }
 #misc-panel { grid-column:3; display:flex; flex-direction:column; gap:7px; }
 #cd-top { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:5px; }
-#cd-label-display { font-size:12px; color:var(--green); letter-spacing:.12em; text-transform:uppercase; text-shadow:0 0 8px rgba(0,255,65,.4); flex:1; min-width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-#cd-digits { font-size:clamp(16px,2.6vw,30px); color:var(--green); letter-spacing:.08em; text-shadow:0 0 12px rgba(0,255,65,.6); white-space:nowrap; }
+#cd-label-display { font-size:12px; color:var(--green); letter-spacing:.12em; text-transform:uppercase; text-shadow:0 0 6px #00ff41, 0 0 16px #00c832; flex:1; min-width:100px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#cd-digits { font-size:clamp(16px,2.6vw,30px); color:var(--green); letter-spacing:.08em; text-shadow:0 0 6px #00ff41, 0 0 18px #00c832; white-space:nowrap; }
 #cd-digits.done { animation:pulse 0.6s ease-in-out infinite; }
 #cd-setup { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
 #cd-name-input {
@@ -92,11 +88,15 @@ body::after {
   letter-spacing:.08em; outline:none; width:120px;
 }
 #cd-name-input::placeholder { color:var(--green-dark); }
-#cd-dt-input {
+.cd-sel {
   background:var(--green-deeper); border:1px solid var(--border); color:var(--green);
-  font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 6px;
-  letter-spacing:.04em; outline:none; color-scheme:dark;
+  font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 5px;
+  letter-spacing:.04em; outline:none; appearance:none; -webkit-appearance:none;
+  cursor:pointer; text-align:center;
 }
+.cd-sel:focus { border-color:var(--green-dim); }
+.cd-sel option { background:#061209; color:var(--green); }
+#cd-sep { color:var(--green-dark); font-size:11px; padding:0 1px; }
 #cd-set-btn {
   background:none; border:1px solid var(--border); color:var(--green-dark);
   font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 10px;
@@ -108,7 +108,7 @@ body::after {
 
 /* STOPWATCH */
 #stopwatch-panel { padding:8px 14px; display:flex; flex-direction:column; gap:5px; }
-#sw-display { font-size:clamp(20px,3vw,36px); color:var(--green); letter-spacing:.1em; text-shadow:0 0 12px rgba(0,255,65,.6); line-height:1; }
+#sw-display { font-size:clamp(20px,3vw,36px); color:var(--green); letter-spacing:.1em; text-shadow:0 0 6px #00ff41, 0 0 18px #00c832; line-height:1; }
 #sw-ms { font-size:11px; color:var(--green-dark); letter-spacing:.08em; }
 #sw-btns { display:flex; gap:6px; }
 .sw-btn { background:none; border:1px solid var(--border); color:var(--green-dark); font-family:'Share Tech Mono',monospace; font-size:10px; padding:3px 12px; letter-spacing:.12em; cursor:pointer; text-transform:uppercase; }
@@ -126,12 +126,13 @@ body::after {
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
 .cal-dn { text-align:center; font-size:9px; color:var(--green-dark); padding-bottom:2px; }
 .cal-d  { text-align:center; font-size:11px; padding:3px 2px; color:var(--green-dark); }
-.cal-d.today { background:var(--green); color:#000; font-weight:700; text-shadow:none; }
+.cal-d.today { background:var(--green); color:#000; font-weight:700; text-shadow:none; outline:2px solid var(--green-dim); outline-offset:-2px; }
+.cal-d:not(.empty):not(.today):hover { color:var(--green); }
 .cal-d.empty { visibility:hidden; }
 
 /* WEATHER */
 #weather-panel { grid-column:2; }
-#weather-temp-big { font-size:32px; color:var(--green); text-shadow:0 0 10px rgba(0,255,65,.5); line-height:1; }
+#weather-temp-big { font-size:32px; color:var(--green); text-shadow:0 0 6px #00ff41, 0 0 18px #00c832; line-height:1; }
 #weather-cond { font-size:12px; color:var(--green-dim); margin-top:3px; text-transform:uppercase; letter-spacing:.1em; }
 #weather-icon { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.06em; }
 #weather-loc  { font-size:10px; color:var(--green-dark); margin-top:2px; letter-spacing:.08em; }
@@ -154,13 +155,15 @@ body::after {
   display:flex; flex-direction:column; gap:0; overflow:hidden; position:relative;
 }
 #ticker-bar::after { content:""; position:absolute; top:0; left:0; right:0; height:1px; background:var(--green-dark); }
-#ticker-tag { color:var(--green); font-size:9px; letter-spacing:.2em; margin-bottom:6px; text-transform:uppercase; }
-#ticker-list { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:5px; }
-#ticker-list::-webkit-scrollbar { width:3px; }
-#ticker-list::-webkit-scrollbar-thumb { background:var(--border); }
-.t-item { font-size:9px; color:var(--green-dim); letter-spacing:.05em; line-height:1.4; border-bottom:1px solid var(--green-deeper); padding-bottom:4px; }
-.t-item:last-child { border-bottom:none; }
-.t-num { color:var(--green-dark); margin-right:4px; }
+#ticker-count { font-size:9px; color:var(--green-dark); letter-spacing:.12em; margin-bottom:8px; }
+#ticker-headline-wrap { flex:1; display:flex; flex-direction:column; justify-content:center; overflow:hidden; }
+#ticker-headline {
+  font-size:11px; color:var(--green-dim); letter-spacing:.05em; line-height:1.5;
+  opacity:0.45; transition:opacity 0.4s ease;
+}
+#ticker-headline.fade { opacity:0; }
+#ticker-progress-bg { height:2px; background:var(--green-deeper); margin-top:8px; overflow:hidden; }
+#ticker-progress-fill { height:2px; background:var(--green-dark); width:0%; transition:width linear; }
 
 /* BOTTOM BAR */
 #bottombar {
@@ -198,9 +201,9 @@ body::after {
 #rock-wrap { position:relative; width:120px; height:160px; }
 #rock-svg { position:absolute; animation:rock-fall 1.4s ease-in infinite; }
 @keyframes rock-fall{
-  0%{top:0;opacity:1;transform:rotate(0deg) scale(1)}
-  80%{top:110px;opacity:1;transform:rotate(160deg) scale(1.1)}
-  85%{top:118px;opacity:1;transform:rotate(170deg) scale(1.15)}
+  0%{top:0;opacity:0.45;transform:rotate(0deg) scale(1)}
+  80%{top:110px;opacity:0.45;transform:rotate(160deg) scale(1.1)}
+  85%{top:118px;opacity:0.45;transform:rotate(170deg) scale(1.15)}
   100%{top:118px;opacity:0;transform:rotate(180deg) scale(.9)}
 }
 #dust {
@@ -209,14 +212,26 @@ body::after {
   animation:dust-puff 1.4s ease-in infinite;
 }
 @keyframes dust-puff{0%{opacity:0;transform:translateX(-50%) scaleX(.2)}82%{opacity:0;transform:translateX(-50%) scaleX(.2)}90%{opacity:.6;transform:translateX(-50%) scaleX(1)}100%{opacity:0;transform:translateX(-50%) scaleX(1.4)}}
+
+/* ── AQI + DEVICE SLIM BARS ── */
+#topinfo {
+  grid-column:1/-1;
+  display:flex; align-items:center; justify-content:space-between;
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  padding:5px 0; font-size:9px; letter-spacing:.1em; gap:12px; flex-wrap:nowrap; overflow:hidden;
+}
+#topinfo .ti-item { display:flex; align-items:center; gap:5px; white-space:nowrap; }
+#topinfo .ti-label { color:var(--green-dark); letter-spacing:.1em; }
+#topinfo .ti-val { color:var(--green); text-shadow:0 0 6px #00ff41; }
+#aqi-bar-inline { width:50px; height:2px; background:var(--green-deeper); overflow:hidden; display:inline-block; vertical-align:middle; }
+#aqi-bar-inline-fill { height:2px; transition:width 1s; }
+#bat-bar-inline { width:36px; height:2px; background:var(--green-deeper); overflow:hidden; display:inline-block; vertical-align:middle; }
+#bat-bar-inline-fill { height:2px; background:var(--green-dim); transition:width 1s; }
 </style>
 </head>
 <body>
 <canvas id="noise"></canvas>
-<div class="tape" id="t1"></div>
-<div class="tape" id="t2"></div>
-<div class="tape" id="t3"></div>
-<div class="tape" id="t4"></div>
+<div id="tape"></div>
 
 <!-- EARTHQUAKE OVERLAY -->
 <div id="quake-overlay">
@@ -246,6 +261,17 @@ body::after {
     <span class="sys-label">PERSONAL HUD &middot; SYS-01</span>
     <div class="rec-dot">REC</div>
     <span class="sys-label" id="uptime-label">UPTIME: 00:00:00</span>
+  </div>
+
+  <!-- SLIM INFO BAR -->
+  <div id="topinfo">
+    <div class="ti-item"><span class="ti-label">AQI:</span><span class="ti-val" id="aqi-val">--</span><span class="ti-label" id="aqi-cat" style="margin-left:4px;">--</span><span id="aqi-bar-inline"><span id="aqi-bar-inline-fill" style="width:0%"></span></span></div>
+    <div class="ti-item"><span class="ti-label">PM2.5:</span><span class="ti-val" id="aqi-pm25">--</span></div>
+    <div class="ti-item"><span class="ti-label">PM10:</span><span class="ti-val" id="aqi-pm10">--</span></div>
+    <div class="ti-item"><span class="ti-label">BAT:</span><span class="ti-val" id="bat-pct">--%</span><span id="bat-bar-inline"><span id="bat-bar-inline-fill" style="width:0%"></span></span><span class="ti-label" id="bat-status" style="margin-left:4px;"></span></div>
+
+
+
   </div>
 
   <!-- MERGED: clock + seconds + period -->
@@ -288,7 +314,11 @@ body::after {
     </div>
     <div id="cd-setup">
       <input type="text" id="cd-name-input" placeholder="Label (e.g. Summer Break)" maxlength="28"/>
-      <input type="datetime-local" id="cd-dt-input"/>
+      <select class="cd-sel" id="cd-mon" style="width:46px"></select>
+      <select class="cd-sel" id="cd-day" style="width:38px"></select>
+      <select class="cd-sel" id="cd-yr"  style="width:52px"></select>
+      <select class="cd-sel" id="cd-hr"  style="width:38px"></select>
+      <select class="cd-sel" id="cd-min" style="width:38px"></select>
       <button id="cd-set-btn">SET</button>
       <button id="cd-clear-btn" style="background:none;border:1px solid var(--border);color:var(--green-dark);font-family:'Share Tech Mono',monospace;font-size:10px;padding:3px 10px;letter-spacing:.1em;cursor:pointer;text-transform:uppercase;">CLR</button>
     </div>
@@ -351,8 +381,15 @@ body::after {
   <!-- NEWS TICKER (col 3, middle row) -->
   <div id="ticker-bar">
     <div class="plabel">// Live News //</div>
-    <div id="ticker-list"><div class="t-item">Loading headlines...</div></div>
+    <div id="ticker-count">-- / --</div>
+    <div id="ticker-headline-wrap">
+      <div id="ticker-headline">Fetching headlines...</div>
+    </div>
+    <div id="ticker-progress-bg"><div id="ticker-progress-fill"></div></div>
   </div>
+
+
+
 
   <!-- BOTTOM BAR -->
   <div id="bottombar">
@@ -385,6 +422,7 @@ function getWeek(d){
 function getDOY(d){return Math.floor((d-new Date(d.getFullYear(),0,0))/86400000);}
 let startTime=Date.now();
 
+
 /* ── CALENDAR ── */
 function buildCalendar(){
   const now=new Date();
@@ -412,11 +450,71 @@ function saveCD(){
   try{localStorage.setItem('hud_cd',JSON.stringify({t:cdTarget,l:cdLabel,s:cdStart}));}catch(e){}
 }
 
+// Populate custom date/time selects
+(function(){
+  const MONTHS=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const now=new Date();
+  const monEl=document.getElementById('cd-mon');
+  const dayEl=document.getElementById('cd-day');
+  const yrEl=document.getElementById('cd-yr');
+  const hrEl=document.getElementById('cd-hr');
+  const minEl=document.getElementById('cd-min');
+
+  MONTHS.forEach((m,i)=>{
+    const o=document.createElement('option');
+    o.value=i; o.textContent=m;
+    if(i===now.getMonth()) o.selected=true;
+    monEl.appendChild(o);
+  });
+
+  function populateDays(year,month){
+    const cur=dayEl.value;
+    dayEl.innerHTML='';
+    const dim=new Date(year,month+1,0).getDate();
+    for(let d=1;d<=dim;d++){
+      const o=document.createElement('option');
+      o.value=d; o.textContent=String(d).padStart(2,'0');
+      if(d===parseInt(cur)||d===now.getDate()) o.selected=(d===now.getDate());
+      dayEl.appendChild(o);
+    }
+  }
+
+  for(let y=now.getFullYear();y<=now.getFullYear()+5;y++){
+    const o=document.createElement('option');
+    o.value=y; o.textContent=y;
+    if(y===now.getFullYear()) o.selected=true;
+    yrEl.appendChild(o);
+  }
+
+  for(let h=0;h<24;h++){
+    const o=document.createElement('option');
+    o.value=h; o.textContent=String(h).padStart(2,'0');
+    if(h===now.getHours()) o.selected=true;
+    hrEl.appendChild(o);
+  }
+
+  for(let m=0;m<60;m+=1){
+    const o=document.createElement('option');
+    o.value=m; o.textContent=String(m).padStart(2,'0');
+    if(m===0) o.selected=true;
+    minEl.appendChild(o);
+  }
+
+  populateDays(now.getFullYear(),now.getMonth());
+  monEl.addEventListener('change',()=>populateDays(parseInt(yrEl.value),parseInt(monEl.value)));
+  yrEl.addEventListener('change',()=>populateDays(parseInt(yrEl.value),parseInt(monEl.value)));
+})();
+
 document.getElementById('cd-set-btn').addEventListener('click',()=>{
   const name=document.getElementById('cd-name-input').value.trim();
-  const dt=document.getElementById('cd-dt-input').value;
-  if(!dt) return;
-  cdTarget=new Date(dt).getTime();
+  const yr=parseInt(document.getElementById('cd-yr').value);
+  const mo=parseInt(document.getElementById('cd-mon').value);
+  const dy=parseInt(document.getElementById('cd-day').value);
+  const hr=parseInt(document.getElementById('cd-hr').value);
+  const mn=parseInt(document.getElementById('cd-min').value);
+  const dt=new Date(yr,mo,dy,hr,mn,0);
+  if(isNaN(dt.getTime())) return;
+  cdTarget=dt.getTime();
   cdLabel=name||'COUNTDOWN';
   cdStart=Date.now();
   document.getElementById('cd-digits').classList.remove('done');
@@ -491,10 +589,39 @@ function tick(){
   tickCountdown();
 }
 
-/* ── NEWS via Hacker News API (no key, full CORS) ── */
+/* ── NEWS via Hacker News API ── */
+let newsStories=[], newsIdx=0, newsCycleTimer=null;
+const NEWS_INTERVAL=6000; // ms per headline
+
+function showHeadline(idx){
+  const el=document.getElementById('ticker-headline');
+  const count=document.getElementById('ticker-count');
+  const fill=document.getElementById('ticker-progress-fill');
+  if(!newsStories.length){el.textContent='No stories loaded.';return;}
+  newsIdx=((idx%newsStories.length)+newsStories.length)%newsStories.length;
+  // fade out
+  el.classList.add('fade');
+  setTimeout(()=>{
+    el.textContent=newsStories[newsIdx];
+    count.textContent=pad(newsIdx+1)+' / '+pad(newsStories.length);
+    el.classList.remove('fade');
+    // animate progress bar
+    fill.style.transition='none';
+    fill.style.width='0%';
+    fill.offsetHeight; // reflow
+    fill.style.transition='width '+NEWS_INTERVAL+'ms linear';
+    fill.style.width='100%';
+  },400);
+}
+
+function startNewsCycle(){
+  if(newsCycleTimer) clearInterval(newsCycleTimer);
+  showHeadline(0);
+  newsCycleTimer=setInterval(()=>{ showHeadline(newsIdx+1); }, NEWS_INTERVAL);
+}
+
 function loadNews(){
-  const list=document.getElementById('ticker-list');
-  list.innerHTML="<div class='t-item'>Fetching...</div>";
+  document.getElementById('ticker-headline').textContent='Fetching...';
   fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
     .then(r=>r.json())
     .then(ids=>{
@@ -504,13 +631,12 @@ function loadNews(){
       ));
     })
     .then(stories=>{
-      list.innerHTML=stories
-        .filter(s=>s&&s.title)
-        .map((s,i)=>`<div class='t-item'><span class='t-num'>${String(i+1).padStart(2,'0')}.</span>${s.title}</div>`)
-        .join('');
+      newsStories=stories.filter(s=>s&&s.title).map(s=>s.title);
+      startNewsCycle();
     })
     .catch(()=>{
-      list.innerHTML="<div class='t-item'>NEWS FEED UNAVAILABLE</div>";
+      document.getElementById('ticker-headline').textContent='NEWS FEED UNAVAILABLE';
+      document.getElementById('ticker-count').textContent='-- / --';
     });
 }
 
@@ -537,24 +663,127 @@ document.getElementById('quake-overlay').addEventListener('click',()=>{
   document.getElementById('quake-overlay').classList.remove('active');
 });
 
-/* ── GRAIN NOISE ── */
+/* ── MATRIX RAIN ── */
 (function(){
   const c=document.getElementById('noise');
   const ctx=c.getContext('2d');
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  const FS=14;
+  const CHARS='ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let cols, drops, streamLen, streamChars;
+
+  function resize(){
+    c.width=window.innerWidth;
+    c.height=window.innerHeight;
+    cols=Math.floor(c.width/FS);
+    drops=new Array(cols).fill(1);
+    // each column gets a random stream length
+    streamLen=Array.from({length:cols},()=>Math.floor(6+Math.random()*20));
+    // each column has its own array of random chars
+    streamChars=Array.from({length:cols},()=>
+      Array.from({length:30},()=>CHARS[Math.floor(Math.random()*CHARS.length)])
+    );
+  }
   resize();
   window.addEventListener('resize',resize);
-  function drawNoise(){
+
+  // Randomise chars in streams over time for shimmer
+  setInterval(()=>{
+    for(let i=0;i<cols;i++){
+      const pos=Math.floor(Math.random()*streamChars[i].length);
+      streamChars[i][pos]=CHARS[Math.floor(Math.random()*CHARS.length)];
+    }
+  },80);
+
+  function draw(){
     const w=c.width,h=c.height;
-    if(!w||!h){requestAnimationFrame(drawNoise);return;}
-    const img=ctx.createImageData(w,h);
-    const d=img.data;
-    for(let i=0;i<d.length;i+=4){const v=Math.random()>.5?255:0;d[i]=0;d[i+1]=v;d[i+2]=0;d[i+3]=30;}
-    ctx.putImageData(img,0,0);
-    requestAnimationFrame(drawNoise);
+    if(!w||!h){requestAnimationFrame(draw);return;}
+
+    // Black fade — slower = longer trails
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.fillRect(0,0,w,h);
+
+    ctx.font='100 '+FS+'px monospace';
+
+    for(let i=0;i<cols;i++){
+      const sLen=streamLen[i];
+      for(let j=0;j<sLen;j++){
+        const y=(drops[i]-j)*FS;
+        if(y<0) continue;
+        const ch=streamChars[i][j%streamChars[i].length];
+        if(j===0){
+          // Head: bright white
+          ctx.fillStyle='rgba(0,255,65,0.6)';
+        } else if(j===1){
+          ctx.fillStyle='rgba(0,200,50,0.4)';
+        } else {
+          // Trail: fade from bright to dark green
+          const ratio=j/sLen;
+          const g=Math.floor(255*(1-ratio*0.85));
+          const a=Math.max(0.08,1-ratio*0.9);
+          ctx.fillStyle=`rgba(0,${g},0,${a})`;
+        }
+        ctx.fillText(ch,i*FS,y);
+      }
+
+      drops[i]++;
+      if(drops[i]*FS>h+sLen*FS && Math.random()>0.975){
+        drops[i]=0;
+        streamLen[i]=Math.floor(6+Math.random()*20);
+      }
+    }
+    setTimeout(()=>requestAnimationFrame(draw),45);
   }
-  drawNoise();
+  draw();
 })();
+/* ── AIR QUALITY (Open-Meteo, no key) ── */
+function updateAQI(){
+  const url='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=33.9534&longitude=-117.3961&current=us_aqi,pm2_5,pm10&timezone=America%2FLos_Angeles';
+  fetch(url)
+    .then(r=>r.json())
+    .then(d=>{
+      const aqi=d.current&&d.current.us_aqi!=null?Math.round(d.current.us_aqi):null;
+      const pm25=d.current&&d.current.pm2_5!=null?d.current.pm2_5.toFixed(1):null;
+      const pm10=d.current&&d.current.pm10!=null?d.current.pm10.toFixed(1):null;
+      if(aqi!==null){
+        document.getElementById('aqi-val').textContent=aqi;
+        let cat,col;
+        if(aqi<=50){cat='GOOD';col='#00ff41';}
+        else if(aqi<=100){cat='MODERATE';col='#facc15';}
+        else if(aqi<=150){cat='UNHEALTHY (SG)';col='#fb923c';}
+        else if(aqi<=200){cat='UNHEALTHY';col='#ef4444';}
+        else{cat='HAZARDOUS';col='#a855f7';}
+        document.getElementById('aqi-cat').textContent=cat;
+        const pct=Math.min(100,Math.round(aqi/300*100));
+        document.getElementById('aqi-bar-inline-fill').style.width=pct+'%';
+        document.getElementById('aqi-bar-inline-fill').style.background=col;
+        document.getElementById('aqi-val').style.color=col; document.getElementById('aqi-cat').style.color=col;
+      }
+      if(pm25) document.getElementById('aqi-pm25').textContent=pm25+' µg/m³';
+      if(pm10) document.getElementById('aqi-pm10').textContent=pm10+' µg/m³';
+    }).catch(()=>{ document.getElementById('aqi-val').textContent='ERR'; });
+}
+
+/* ── BATTERY / DEVICE ── */
+function updateDevice(){
+  
+  
+  
+  if(navigator.getBattery){
+    navigator.getBattery().then(b=>{
+      const pct=Math.round(b.level*100);
+      document.getElementById('bat-pct').textContent=pct+'%';
+      document.getElementById('bat-status').textContent=b.charging?'[ CHARGING ]':'[ ON BATTERY ]';
+      document.getElementById('bat-bar-inline-fill').style.width=pct+'%';
+      const col=pct>50?'var(--green-dim)':pct>20?'#facc15':'#ef4444';
+      document.getElementById('bat-bar-inline-fill').style.background=col;
+      b.addEventListener('levelchange',updateDevice);
+      b.addEventListener('chargingchange',updateDevice);
+    });
+  } else {
+    document.getElementById('bat-pct').textContent='N/A';
+    document.getElementById('bat-status').textContent='[ NO BATTERY API ]';
+  }
+}
 
 /* ── INIT ── */
 loadCD();
@@ -566,6 +795,8 @@ checkEarthquakes();
 setInterval(checkEarthquakes,30000);
 loadNews();
 setInterval(loadNews,300000); // refresh news every 5 min
+updateAQI(); setInterval(updateAQI,300000);
+updateDevice();
 /* ── STOPWATCH ── */
 let swRunning=false, swElapsed=0, swStarted=0, swLaps=[], swLapStart=0;
 
