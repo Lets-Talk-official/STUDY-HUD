@@ -9,7 +9,7 @@
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 :root {
   --green:#00ff41; --green-dim:#00c832; --green-dark:#007a1f;
-  --green-deeper:#003d0f; --bg:#0a1a0d; --panel:rgba(6,18,9,0.85); --border:#005c14;
+  --green-deeper:#003d0f; --bg:#0a1a0d; --panel:rgba(6,18,9,0.75); --border:#005c14;
 }
 html,body { width:100%; height:100%; background:#000000; color:var(--green); font-family:'Share Tech Mono',monospace; overflow:hidden; }
 @keyframes flicker { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:.88} 94%{opacity:1} 97%{opacity:.94} 98%{opacity:1} }
@@ -30,7 +30,7 @@ body::after {
   position:relative; z-index:2;
   width:100vw; height:100vh;
   display:grid;
-  grid-template-rows: auto auto auto 1fr auto auto;
+  grid-template-rows: auto auto auto 1fr auto auto auto auto;
   grid-template-columns: 1fr 1fr 1fr;
   gap:7px; padding:9px;
 }
@@ -165,6 +165,26 @@ body::after {
 #ticker-progress-bg { height:2px; background:var(--green-deeper); margin-top:8px; overflow:hidden; }
 #ticker-progress-fill { height:2px; background:var(--green-dark); width:0%; transition:width linear; }
 
+
+/* SPORTS SCORES */
+#sports-panel { grid-column:1/-1; display:flex; gap:7px; align-items:stretch; }
+.sport-block { flex:1; background:var(--panel); border:1px solid var(--border); padding:8px 10px; position:relative; overflow:hidden; }
+.sport-block::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--green-dark); }
+.sport-title { font-size:9px; letter-spacing:.18em; color:var(--green-dark); text-transform:uppercase; margin-bottom:5px; }
+.game-row { font-size:9px; color:var(--green-dark); letter-spacing:.05em; padding:2px 0; border-bottom:1px solid var(--green-deeper); display:flex; justify-content:space-between; gap:6px; }
+.game-row:last-child { border-bottom:none; }
+.game-teams { color:var(--green-dim); flex:1; }
+.game-score { color:var(--green); white-space:nowrap; text-shadow:0 0 6px #00ff41; }
+.game-status { color:var(--green-dark); font-size:8px; white-space:nowrap; }
+
+/* QUOTES */
+#quote-panel { grid-column:1/-1; background:var(--panel); border:1px solid var(--border); padding:8px 14px; position:relative; overflow:hidden; display:flex; align-items:center; gap:12px; }
+#quote-panel::after { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--green-dark); }
+#quote-tag { font-size:9px; color:var(--green-dark); letter-spacing:.18em; white-space:nowrap; }
+#quote-text { flex:1; font-size:10px; color:var(--green-dim); letter-spacing:.05em; line-height:1.5; opacity:1; transition:opacity 0.5s ease; font-style:italic; }
+#quote-text.fade { opacity:0; }
+#quote-author { font-size:9px; color:var(--green-dark); white-space:nowrap; letter-spacing:.08em; }
+
 /* BOTTOM BAR */
 #bottombar {
   grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
@@ -213,7 +233,7 @@ body::after {
 }
 @keyframes dust-puff{0%{opacity:0;transform:translateX(-50%) scaleX(.2)}82%{opacity:0;transform:translateX(-50%) scaleX(.2)}90%{opacity:.6;transform:translateX(-50%) scaleX(1)}100%{opacity:0;transform:translateX(-50%) scaleX(1.4)}}
 
-/* ── AQI + DEVICE SLIM BARS ── */
+/* AQI + DEVICE SLIM BARS */
 #topinfo {
   grid-column:1/-1;
   display:flex; align-items:center; justify-content:space-between;
@@ -227,6 +247,73 @@ body::after {
 #aqi-bar-inline-fill { height:2px; transition:width 1s; }
 #bat-bar-inline { width:36px; height:2px; background:var(--green-deeper); overflow:hidden; display:inline-block; vertical-align:middle; }
 #bat-bar-inline-fill { height:2px; background:var(--green-dim); transition:width 1s; }
+
+/* ── RESPONSIVE ── */
+
+/* Base fluid type */
+#clock-time      { font-size: clamp(20px, 4vw, 68px) !important; }
+#sw-display      { font-size: clamp(14px, 2.5vw, 36px) !important; }
+#cd-digits       { font-size: clamp(12px, 2vw, 30px) !important; }
+#weather-temp-big{ font-size: clamp(18px, 2.5vw, 32px) !important; }
+#period-name     { font-size: clamp(10px, 1.2vw, 14px) !important; }
+#period-icon-text{ font-size: clamp(11px, 1.4vw, 18px) !important; }
+#sec-num         { font-size: clamp(12px, 1.6vw, 22px) !important; }
+.plabel          { font-size: clamp(7px, 0.8vw, 9px) !important; }
+.sys-label       { font-size: clamp(8px, 0.9vw, 11px) !important; }
+.cal-d           { font-size: clamp(8px, 0.9vw, 11px) !important; }
+.fc-t            { font-size: clamp(8px, 0.9vw, 11px) !important; }
+.stat-key,.stat-val { font-size: clamp(8px, 0.85vw, 10px) !important; }
+#ticker-headline { font-size: clamp(9px, 0.9vw, 11px) !important; }
+.game-row        { font-size: clamp(7px, 0.8vw, 9px) !important; }
+#quote-text      { font-size: clamp(9px, 0.9vw, 11px) !important; }
+#bottombar       { font-size: clamp(8px, 0.85vw, 10px) !important; }
+
+/* Fluid sec ring */
+#sec-wrap { width: clamp(50px, 7vw, 86px) !important; height: clamp(50px, 7vw, 86px) !important; }
+#sec-wrap svg { width:100% !important; height:100% !important; }
+
+/* Tablet: 2 col */
+@media (max-width: 900px) {
+  #app {
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: auto auto auto auto auto auto auto auto auto auto !important;
+    gap: 5px !important; padding: 7px !important;
+  }
+  #topbar, #topinfo, #main-panel, #sports-panel, #quote-panel, #bottombar {
+    grid-column: 1 / -1 !important;
+  }
+  #countdown-panel  { grid-column: 1 !important; }
+  #stopwatch-panel  { grid-column: 2 !important; }
+  #misc-panel       { grid-column: 1 / -1 !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 8px !important; }
+  #cal-panel        { grid-column: 1 !important; }
+  #weather-panel    { grid-column: 2 !important; }
+  #ticker-bar       { grid-column: 1 / -1 !important; }
+  #sports-panel     { flex-wrap: wrap !important; }
+  .sport-block      { min-width: calc(50% - 4px) !important; }
+  #mp-clock         { flex: 1.5 !important; }
+}
+
+/* Phone: 1 col */
+@media (max-width: 540px) {
+  #app {
+    grid-template-columns: 1fr !important;
+    gap: 4px !important; padding: 5px !important;
+  }
+  #main-panel { flex-direction: column !important; }
+  #mp-clock { border-right: none !important; border-bottom: 1px solid var(--border) !important; padding-right: 0 !important; margin-right: 0 !important; padding-bottom: 8px !important; margin-bottom: 8px !important; }
+  #mp-seconds { border-right: none !important; border-bottom: 1px solid var(--border) !important; padding-right: 0 !important; margin-right: 0 !important; padding-bottom: 8px !important; margin-bottom: 8px !important; flex-direction: row !important; gap: 12px !important; }
+  #countdown-panel, #stopwatch-panel, #misc-panel, #cal-panel, #weather-panel, #ticker-bar { grid-column: 1 !important; }
+  .sport-block { min-width: 100% !important; }
+  #topinfo { flex-wrap: wrap !important; gap: 6px !important; }
+  #cd-setup { flex-wrap: wrap !important; }
+}
+
+/* Large / 4K: scale up */
+@media (min-width: 1600px) {
+  #app { gap: 10px !important; padding: 14px !important; }
+  .panel { padding: 14px 16px !important; }
+}
+
 </style>
 </head>
 <body>
@@ -269,9 +356,6 @@ body::after {
     <div class="ti-item"><span class="ti-label">PM2.5:</span><span class="ti-val" id="aqi-pm25">--</span></div>
     <div class="ti-item"><span class="ti-label">PM10:</span><span class="ti-val" id="aqi-pm10">--</span></div>
     <div class="ti-item"><span class="ti-label">BAT:</span><span class="ti-val" id="bat-pct">--%</span><span id="bat-bar-inline"><span id="bat-bar-inline-fill" style="width:0%"></span></span><span class="ti-label" id="bat-status" style="margin-left:4px;"></span></div>
-
-
-
   </div>
 
   <!-- MERGED: clock + seconds + period -->
@@ -281,7 +365,7 @@ body::after {
       <div id="clock-time">--:--:--</div>
       <div id="clock-date">Loading...</div>
       <div id="clock-ms">MS: <span id="ms-val">000</span></div>
-      <div id="clock-tz">TZ: America/Los_Angeles</div>
+      <div id="clock-tz">TZ: Eastvale, CA (PST/PDT)</div>
     </div>
     <div id="mp-seconds">
       <div class="plabel">Seconds</div>
@@ -390,6 +474,34 @@ body::after {
 
 
 
+
+
+  <!-- SPORTS SCORES -->
+  <div id="sports-panel">
+    <div class="sport-block">
+      <div class="sport-title">NBA</div>
+      <div id="nba-games"><div class="game-row"><span class="game-teams">Loading...</span></div></div>
+    </div>
+    <div class="sport-block">
+      <div class="sport-title">NFL</div>
+      <div id="nfl-games"><div class="game-row"><span class="game-teams">Loading...</span></div></div>
+    </div>
+    <div class="sport-block">
+      <div class="sport-title">MLB</div>
+      <div id="mlb-games"><div class="game-row"><span class="game-teams">Loading...</span></div></div>
+    </div>
+    <div class="sport-block">
+      <div class="sport-title">NHL</div>
+      <div id="nhl-games"><div class="game-row"><span class="game-teams">Loading...</span></div></div>
+    </div>
+  </div>
+
+  <!-- MOTIVATIONAL QUOTE -->
+  <div id="quote-panel">
+    <div id="quote-tag">// QUOTE //</div>
+    <div id="quote-text">Loading...</div>
+    <div id="quote-author">--</div>
+  </div>
 
   <!-- BOTTOM BAR -->
   <div id="bottombar">
@@ -589,9 +701,9 @@ function tick(){
   tickCountdown();
 }
 
-/* ── NEWS via Hacker News API ── */
+/* ── NEWS via saurav.tech NewsAPI (no key, US top headlines) ── */
 let newsStories=[], newsIdx=0, newsCycleTimer=null;
-const NEWS_INTERVAL=6000; // ms per headline
+const NEWS_INTERVAL=8000; // ms per headline
 
 function showHeadline(idx){
   const el=document.getElementById('ticker-headline');
@@ -599,16 +711,15 @@ function showHeadline(idx){
   const fill=document.getElementById('ticker-progress-fill');
   if(!newsStories.length){el.textContent='No stories loaded.';return;}
   newsIdx=((idx%newsStories.length)+newsStories.length)%newsStories.length;
-  // fade out
+  const story=newsStories[newsIdx];
   el.classList.add('fade');
   setTimeout(()=>{
-    el.textContent=newsStories[newsIdx];
+    el.innerHTML='<span style="color:var(--green);font-size:9px;letter-spacing:.1em;">['+story.source+']</span> '+story.title+(story.desc?'<br><span style="font-size:9px;color:var(--green-dark);">'+story.desc+'</span>':'');
     count.textContent=pad(newsIdx+1)+' / '+pad(newsStories.length);
     el.classList.remove('fade');
-    // animate progress bar
     fill.style.transition='none';
     fill.style.width='0%';
-    fill.offsetHeight; // reflow
+    fill.offsetHeight;
     fill.style.transition='width '+NEWS_INTERVAL+'ms linear';
     fill.style.width='100%';
   },400);
@@ -622,17 +733,17 @@ function startNewsCycle(){
 
 function loadNews(){
   document.getElementById('ticker-headline').textContent='Fetching...';
-  fetch('https://hacker-news.firebaseio.com/v0/topstories.json')
+  fetch('https://saurav.tech/NewsAPI/top-headlines/category/general/us.json')
     .then(r=>r.json())
-    .then(ids=>{
-      const top=ids.slice(0,15);
-      return Promise.all(top.map(id=>
-        fetch('https://hacker-news.firebaseio.com/v0/item/'+id+'.json').then(r=>r.json())
-      ));
-    })
-    .then(stories=>{
-      newsStories=stories.filter(s=>s&&s.title).map(s=>s.title);
-      startNewsCycle();
+    .then(data=>{
+      if(data.articles&&data.articles.length){
+        newsStories=data.articles.slice(0,20).map(a=>({
+          title:a.title||'',
+          source:(a.source&&a.source.name)?a.source.name.toUpperCase():'NEWS',
+          desc:a.description?a.description.substring(0,80)+(a.description.length>80?'...':''):''
+        }));
+        startNewsCycle();
+      }
     })
     .catch(()=>{
       document.getElementById('ticker-headline').textContent='NEWS FEED UNAVAILABLE';
@@ -698,7 +809,7 @@ document.getElementById('quake-overlay').addEventListener('click',()=>{
     const w=c.width,h=c.height;
     if(!w||!h){requestAnimationFrame(draw);return;}
 
-    // Black fade — slower = longer trails
+    // Black fade -- slower = longer trails
     ctx.fillStyle='rgba(0,0,0,0.15)';
     ctx.fillRect(0,0,w,h);
 
@@ -765,9 +876,6 @@ function updateAQI(){
 
 /* ── BATTERY / DEVICE ── */
 function updateDevice(){
-  
-  
-  
   if(navigator.getBattery){
     navigator.getBattery().then(b=>{
       const pct=Math.round(b.level*100);
@@ -785,6 +893,91 @@ function updateDevice(){
   }
 }
 
+
+/* ── SPORTS SCORES (ESPN unofficial API) ── */
+function renderGames(containerId, events) {
+  const el = document.getElementById(containerId);
+  if (!events || !events.length) {
+    el.innerHTML = '<div class="game-row"><span class="game-teams">No games today</span></div>';
+    return;
+  }
+  el.innerHTML = events.slice(0,4).map(e => {
+    const comps = e.competitions && e.competitions[0];
+    if (!comps) return '';
+    const teams = comps.competitors || [];
+    const home = teams.find(t => t.homeAway === 'home') || teams[0];
+    const away = teams.find(t => t.homeAway === 'away') || teams[1];
+    if (!home || !away) return '';
+    const hn = home.team.abbreviation || home.team.shortDisplayName || '';
+    const an = away.team.abbreviation || away.team.shortDisplayName || '';
+    const hs = home.score || '-';
+    const as = away.score || '-';
+    const status = e.status && e.status.type ? e.status.type.shortDetail || e.status.type.description : '';
+    return `<div class="game-row"><span class="game-teams">${an} vs ${hn}</span><span class="game-score">${as}-${hs}</span><span class="game-status">${status}</span></div>`;
+  }).join('');
+}
+
+function loadSports() {
+  const sports = [
+    { url: 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard', id: 'nba-games' },
+    { url: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',   id: 'nfl-games' },
+    { url: 'https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/scoreboard',   id: 'mlb-games' },
+    { url: 'https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/scoreboard',     id: 'nhl-games' },
+  ];
+  sports.forEach(s => {
+    fetch(s.url)
+      .then(r => r.json())
+      .then(d => renderGames(s.id, d.events))
+      .catch(() => {
+        document.getElementById(s.id).innerHTML = '<div class="game-row"><span class="game-teams">Unavailable</span></div>';
+      });
+  });
+}
+
+/* ── MOTIVATIONAL QUOTES ── */
+const QUOTES = [
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { text: "The harder I work, the luckier I get.", author: "Samuel Goldwyn" },
+  { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+  { text: "Great things never come from comfort zones.", author: "Unknown" },
+  { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+  { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
+  { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown" },
+  { text: "It's going to be hard, but hard does not mean impossible.", author: "Unknown" },
+  { text: "Don't stop when you're tired. Stop when you're done.", author: "Unknown" },
+  { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+  { text: "Little things make big days.", author: "Unknown" },
+  { text: "It's going to be hard, but hard is not impossible.", author: "Unknown" },
+  { text: "First, solve the problem. Then, write the code.", author: "John Johnson" },
+  { text: "Make each day your masterpiece.", author: "John Wooden" },
+  { text: "You are never too old to set another goal or dream a new dream.", author: "C.S. Lewis" },
+  { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+  { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+];
+
+let quoteIdx = Math.floor(Math.random() * QUOTES.length);
+function showQuote() {
+  const el = document.getElementById('quote-text');
+  const au = document.getElementById('quote-author');
+  el.classList.add('fade');
+  setTimeout(() => {
+    quoteIdx = (quoteIdx + 1) % QUOTES.length;
+    el.textContent = '"' + QUOTES[quoteIdx].text + '"';
+    au.textContent = '— ' + QUOTES[quoteIdx].author;
+    el.classList.remove('fade');
+  }, 500);
+}
+function initQuotes() {
+  const el = document.getElementById('quote-text');
+  const au = document.getElementById('quote-author');
+  el.textContent = '"' + QUOTES[quoteIdx].text + '"';
+  au.textContent = '— ' + QUOTES[quoteIdx].author;
+  setInterval(showQuote, 30000); // rotate every 30s
+}
+
 /* ── INIT ── */
 loadCD();
 buildCalendar();
@@ -796,6 +989,8 @@ setInterval(checkEarthquakes,30000);
 loadNews();
 setInterval(loadNews,300000); // refresh news every 5 min
 updateAQI(); setInterval(updateAQI,300000);
+loadSports(); setInterval(loadSports,120000);
+initQuotes();
 updateDevice();
 /* ── STOPWATCH ── */
 let swRunning=false, swElapsed=0, swStarted=0, swLaps=[], swLapStart=0;
